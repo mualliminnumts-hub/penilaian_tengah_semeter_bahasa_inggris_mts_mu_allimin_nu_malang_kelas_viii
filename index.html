@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS Bahasa Inggris Kelas VIII - MTs. Mu'allimin NU Kota Malang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-blue-50 to-sky-100 min-h-full text-slate-800 flex flex-col justify-between">
+
+    <div id="app" class="flex-grow flex flex-col">
+        <!-- Header Banner -->
+        <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div id="headerLogoContainer" class="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center text-indigo-200 font-bold text-xl border border-indigo-700">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base md:text-lg tracking-tight" id="headerSchoolName">MTs. Mu'allimin NU Kota Malang</h1>
+                        <p class="text-xs text-indigo-200">Mid-Term Assessment (PTS) English - Grade VIII</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="badgeAuthor" class="hidden md:inline-block text-xs bg-indigo-950/60 text-indigo-200 px-3 py-1 rounded-full border border-indigo-800">
+                        Compiled by: Puji Linda Evita, S.Pd.
+                    </span>
+                    <div id="userProfileBadge" class="hidden flex items-center gap-2 bg-indigo-800/60 px-3 py-1.5 rounded-xl border border-indigo-700 text-xs">
+                        <i class="fa-solid fa-user-circle text-indigo-300"></i>
+                        <span id="navUserName" class="font-semibold text-white"></span>
+                        <button onclick="handleLogout()" class="ml-2 text-indigo-200 hover:text-white transition" title="Logout">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dynamic Container -->
+        <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6 flex items-center justify-center">
+            
+            <!-- VIEW: LOGIN PAGE -->
+            <div id="viewLogin" class="w-full max-w-md animate-fade">
+                <div class="glass-panel p-8 rounded-3xl shadow-xl border border-indigo-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-500 to-blue-600"></div>
+                    <div class="text-center mb-6">
+                        <div class="inline-flex w-16 h-16 bg-indigo-100 text-indigo-700 rounded-2xl items-center justify-center text-2xl mb-3 shadow-inner">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-indigo-950">English PTS Login</h2>
+                        <p class="text-xs text-slate-500 mt-1">Please log in as a Student or Administrator</p>
+                    </div>
+
+                    <!-- Role Switcher Tabs -->
+                    <div class="flex bg-slate-100 p-1.5 rounded-xl mb-6">
+                        <button onclick="switchLoginTab('siswa')" id="tabSiswa" class="flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-900 shadow-sm">
+                            <i class="fa-solid fa-user-graduate mr-1"></i> Student
+                        </button>
+                        <button onclick="switchLoginTab('admin')" id="tabAdmin" class="flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600 hover:text-indigo-900">
+                            <i class="fa-solid fa-user-shield mr-1"></i> Admin / Teacher
+                        </button>
+                    </div>
+
+                    <!-- Student Form -->
+                    <form id="formSiswa" onsubmit="handleLoginSiswa(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Student Full Name</label>
+                            <input type="text" id="siswaNama" required placeholder="e.g. Siti Aminah" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 text-sm bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Class</label>
+                            <select id="siswaKelas" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 text-sm bg-slate-50/50">
+                                <option value="">-- Select Class --</option>
+                                <option value="VII A">VII A</option>
+                                <option value="VII B">VII B</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Attendance Number (Password)</label>
+                            <input type="password" id="siswaPresensi" required placeholder="e.g. 12" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 text-sm bg-slate-50/50">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-indigo-700 hover:bg-indigo-800 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-700/20 text-sm">
+                            Log In & Start Exam <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </form>
+
+                    <!-- Admin Form -->
+                    <form id="formAdmin" onsubmit="handleLoginAdmin(event)" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Admin Username</label>
+                            <input type="text" id="adminUser" required placeholder="Default username" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 text-sm bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Admin Password</label>
+                            <input type="text" id="adminPass" required placeholder="Default password" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 text-sm bg-slate-50/50">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-700/20 text-sm">
+                            Access Admin Dashboard <i class="fa-solid fa-shield-halved ml-1"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW: STUDENT DASHBOARD -->
+            <div id="viewSiswaDashboard" class="w-full max-w-2xl hidden animate-fade">
+                <div class="glass-panel p-8 rounded-3xl shadow-xl border border-indigo-100 space-y-6">
+                    <div class="border-b border-slate-100 pb-4 flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider">Welcome Student</span>
+                            <h2 id="welcomeSiswaName" class="text-2xl font-bold text-slate-900 mt-2"></h2>
+                            <p class="text-xs text-slate-500 mt-0.5">Class: <span id="welcomeSiswaKelas" class="font-semibold text-slate-700"></span> | Attendance No: <span id="welcomeSiswaPresensi" class="font-semibold text-slate-700"></span></p>
+                        </div>
+                        <div class="bg-indigo-50 text-indigo-900 p-3 rounded-2xl text-center">
+                            <div class="text-xs font-medium">Passing Grade</div>
+                            <div class="text-xl font-bold">80</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/60 space-y-3">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-indigo-600"></i> Assessment Rules (Grade VIII English PTS)
+                        </h3>
+                        <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside">
+                            <li>Topic covered: <strong>Celebrating Independence Day</strong>.</li>
+                            <li>Total questions: 35 items (15 Multiple Choice, 15 Complex Multiple Choice, 5 Matching).</li>
+                            <li>Duration: <strong>90 Minutes</strong>.</li>
+                            <li>Maximum attempts allowed: <strong>3 times</strong>.</li>
+                            <li>Minimum Passing Grade (KKM): <strong>80</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div id="attemptStatusContainer" class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-xs flex justify-between items-center">
+                        <div>
+                            <span class="font-bold">Attempt History:</span> You have completed <span id="currentAttemptCount" class="font-bold">0</span> of 3 attempts.
+                        </div>
+                        <div id="lastScoreDisplay" class="font-bold"></div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button id="btnMulaiUjian" onclick="startExam()" class="flex-1 py-3.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold rounded-2xl transition shadow-lg shadow-indigo-700/20 text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Start Assessment Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: EXAM ROOM -->
+            <div id="viewExamRoom" class="w-full max-w-4xl hidden animate-fade space-y-4">
+                <!-- Exam Top Bar / Timer -->
+                <div class="glass-panel p-4 rounded-2xl shadow-md border border-indigo-100 flex justify-between items-center sticky top-16 z-40">
+                    <div>
+                        <div class="text-xs text-slate-500">Question No. <span id="currentQuestionNum" class="font-bold text-indigo-900 text-sm">1</span> of 35</div>
+                        <div class="text-xs font-semibold text-slate-700" id="currentQuestionTypeTag">Multiple Choice</div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-inner">
+                            <i class="fa-solid fa-clock"></i>
+                            <span id="examTimer">90:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="glass-panel p-6 md:p-8 rounded-3xl shadow-xl border border-indigo-100 space-y-6">
+                    <div id="questionContainer" class="space-y-4">
+                        <!-- Dynamic Question Content -->
+                    </div>
+
+                    <!-- Navigation Footer -->
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <button onclick="navigateQuestion(-1)" id="btnPrev" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition disabled:opacity-40">
+                            <i class="fa-solid fa-chevron-left mr-1"> Previous</i>
+                        </button>
+                        <div class="flex gap-2 overflow-x-auto max-w-xs md:max-w-md py-1" id="questionNumberPagination">
+                            <!-- Pagination Dots -->
+                        </div>
+                        <button onclick="navigateQuestion(1)" id="btnNext" class="px-5 py-2.5 rounded-xl bg-indigo-700 text-white hover:bg-indigo-800 text-xs font-bold transition shadow-md shadow-indigo-700/20">
+                            Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: EXAM RESULT -->
+            <div id="viewExamResult" class="w-full max-w-2xl hidden animate-fade">
+                <div class="glass-panel p-8 rounded-3xl shadow-xl border border-indigo-100 text-center space-y-6">
+                    <div id="resultIcon" class="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-3xl shadow-lg">
+                        <!-- Dynamic Icon -->
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">PTS English Assessment Result</h2>
+                        <p class="text-xs text-slate-500 mt-1" id="resultSubtitle">Competency Evaluation Grade VIII</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
+                        <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                            <div class="text-xs text-slate-500">Final Score</div>
+                            <div id="resFinalScore" class="text-2xl font-bold text-indigo-900 mt-1">0</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                            <div class="text-xs text-slate-500">Passing Grade</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">80</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                            <div class="text-xs text-slate-500">Status</div>
+                            <div id="resStatus" class="text-sm font-bold mt-2">--</div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="downloadPDFCertificate()" class="flex-1 py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-700/20 text-xs flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Download Result (PDF)
+                        </button>
+                        <button onclick="returnToDashboard()" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-xs">
+                            Return to Menu
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: ADMIN DASHBOARD -->
+            <div id="viewAdminDashboard" class="w-full max-w-6xl hidden animate-fade space-y-6">
+                <!-- Admin Header & Actions -->
+                <div class="glass-panel p-6 rounded-3xl shadow-xl border border-indigo-100 flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">Administrator Panel</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Grade VIII English PTS Management</h2>
+                        <p class="text-xs text-slate-500">Manage questions, students, logo, test mode, and admin password security</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="adminActionTestExam()" class="px-4 py-2.5 bg-sky-700 hover:bg-sky-800 text-white font-bold rounded-xl text-xs transition shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-laptop-code"></i> Test Exam As Student
+                        </button>
+                        <button onclick="openAdminSettingsModal()" class="px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-key"></i> Change Password
+                        </button>
+                        <button onclick="openAdminLogoModal()" class="px-4 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold rounded-xl text-xs transition shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-image"></i> Edit Logo / Identity
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Tabs -->
+                <div class="flex gap-2 border-b border-slate-200 pb-2">
+                    <button onclick="switchAdminTab('soal')" id="adminTabSoalBtn" class="px-5 py-2.5 text-xs font-bold rounded-xl transition bg-indigo-700 text-white shadow-md">
+                        <i class="fa-solid fa-list-check mr-1"></i> Question Bank (Edit)
+                    </button>
+                    <button onclick="switchAdminTab('nilai')" id="adminTabNilaiBtn" class="px-5 py-2.5 text-xs font-bold rounded-xl transition bg-white text-slate-700 hover:bg-slate-100">
+                        <i class="fa-solid fa-chart-bar mr-1"></i> Student Score Recap
+                    </button>
+                </div>
+
+                <!-- TAB CONTENT: SOAL EDIT -->
+                <div id="adminTabSoalContent" class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 text-sm">Assessment Question List (Total 35 Items)</h3>
+                        <span class="text-xs text-slate-500">Admin can directly edit question text below</span>
+                    </div>
+                    <div id="adminQuestionListContainer" class="space-y-4">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT: REKAP NILAI -->
+                <div id="adminTabNilaiContent" class="space-y-4 hidden">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 text-sm">Student Exam Results Recap</h3>
+                        <button onclick="exportScoresCSV()" class="px-4 py-2 bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md hover:bg-indigo-800 transition">
+                            <i class="fa-solid fa-file-excel mr-1"></i> Export Recap (CSV)
+                        </button>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl shadow-md overflow-x-auto border border-indigo-100">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="border-b border-slate-200 text-slate-500 font-bold bg-slate-50">
+                                    <th class="p-3">No</th>
+                                    <th class="p-3">Student Name</th>
+                                    <th class="p-3">Class</th>
+                                    <th class="p-3">Attendance No</th>
+                                    <th class="p-3">Score</th>
+                                    <th class="p-3">Passing Status</th>
+                                    <th class="p-3">Attempt No</th>
+                                    <th class="p-3">Finished Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminScoreTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white/80 border-t border-slate-200 py-3 text-center text-xs text-slate-500">
+            &copy; 2026 MTs. Mu'allimin NU Kota Malang | Compiled by: Puji Linda Evita, S.Pd. | Grade VIII English Mid-Term Assessment
+        </footer>
+    </div>
+
+    <!-- MODAL: ADMIN SETTINGS (CHANGE PASSWORD) -->
+    <div id="modalAdminSettings" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-panel w-full max-w-md p-6 rounded-3xl shadow-2xl border border-slate-200 space-y-4 animate-fade">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-key text-indigo-700 mr-2"></i> Change Admin Password</h3>
+                <button onclick="closeModal('modalAdminSettings')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleSaveAdminPassword(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">New / Current Username</label>
+                    <input type="text" id="settingAdminUser" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">New Password</label>
+                    <input type="text" id="settingAdminPass" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs" placeholder="Enter new password">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modalAdminSettings')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-700 text-white rounded-xl text-xs font-bold">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADMIN LOGO / IDENTITY EDIT -->
+    <div id="modalAdminLogo" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-panel w-full max-w-md p-6 rounded-3xl shadow-2xl border border-slate-200 space-y-4 animate-fade">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-image text-blue-700 mr-2"></i> Edit School Logo & Identity</h3>
+                <button onclick="closeModal('modalAdminLogo')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleSaveAdminIdentity(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">School / Madrasah Name</label>
+                    <input type="text" id="settingSchoolName" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">FontAwesome Icon Class</label>
+                    <input type="text" id="settingSchoolLogo" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs" placeholder="e.g. fa-solid fa-school">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modalAdminLogo')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-700 text-white rounded-xl text-xs font-bold">Save Identity</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: GENERAL MESSAGE BOX -->
+    <div id="modalMessage" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-panel w-full max-w-sm p-6 rounded-3xl shadow-2xl border border-slate-200 text-center space-y-4 animate-fade">
+            <div id="msgModalIcon" class="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-xl text-white"></div>
+            <h3 id="msgModalTitle" class="font-bold text-slate-900 text-base">Information</h3>
+            <p id="msgModalText" class="text-xs text-slate-600"></p>
+            <button onclick="closeModal('modalMessage')" class="w-full py-2.5 bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md hover:bg-indigo-800 transition">Understood</button>
+        </div>
+    </div>
+
+    <script>
+        const defaultQuestions = [
+            // --- 15 MULTIPLE CHOICE (1 - 15) ---
+            {
+                id: 1, type: "pg", materi: "Celebrating Independence Day",
+                question: "Read the sentence: 'Every August 17th, Indonesian people celebrate Independence Day with great enthusiasm.' What is the primary spirit of this national celebration?",
+                options: ["A. Remembering heroes' sacrifices and national unity", "B. Shopping for new clothes at the mall", "C. Preparing for school midterm exams", "D. Traveling abroad for vacation"],
+                answer: 0 // A
+            },
+            {
+                id: 2, type: "pg", materi: "Celebrating Independence Day",
+                question: "During August 17th celebrations at school, students participate in a flag-raising ceremony (upacara bendera). What is the mandatory attire for students?",
+                options: ["A. Casual sports jersey", "B. Formal school uniform with tie and cap", "C. Traditional wedding clothes", "D. Pajamas and slippers"],
+                answer: 1 // B
+            },
+            {
+                id: 3, type: "pg", materi: "Celebrating Independence Day",
+                question: "Look at the event: 'Panjat pinang is a traditional Indonesian game where participants try to climb a greasy slippery pole.' What value is tested in this game?",
+                options: ["A. Individual selfishness", "B. Teamwork, persistence, and cooperation", "C. Silence and meditation", "D. Cooking expertise"],
+                answer: 1 // B
+            },
+            {
+                id: 4, type: "pg", materi: "Celebrating Independence Day",
+                question: "Read the dialogue: 'Did you join the sack race (lomba karung) yesterday?' — 'Yes, I did! It was exhausting, but I won second place.' What event is being discussed?",
+                options: ["A. Independence Day traditional games (lomba 17-an)", "B. Science laboratory experiment", "C. Mathematics Olympiad", "D. School canteen breakfast"],
+                answer: 0 // A
+            },
+            {
+                id: 5, type: "pg", materi: "Celebrating Independence Day",
+                question: "What is the meaning of the red and white flag (Sang Saka Merah Putih) during the Independence Day ceremony?",
+                options: ["A. Red means bravery and white means purity", "B. Red means fire and white means water", "C. Red means anger and white means peace", "D. Red means fruit and white means sugar"],
+                answer: 0 // A
+            },
+            {
+                id: 6, type: "pg", materi: "Celebrating Independence Day",
+                question: "In many neighborhoods, residents hold a community gathering called 'Tasyakuran' or 'Karnaval' on August 17th night. What do they usually do?",
+                options: ["A. Pray together, share traditional meals, and watch cultural performances", "B. Sleep early before midnight", "C. Clean the public river", "D. Study physics formulas"],
+                answer: 0 // A
+            },
+            {
+                id: 7, type: "pg", materi: "Celebrating Independence Day",
+                question: "Read the announcement: 'All students must gather in the school yard at 07.00 AM sharp for the Independence Day ceremony.' What time should students arrive?",
+                options: ["A. Exactly at 07.00 AM or slightly earlier", "B. After the ceremony finishes", "C. At noon time", "D. The next day"],
+                answer: 0 // A
+            },
+            {
+                id: 8, type: "pg", materi: "Celebrating Independence Day",
+                question: "What is the purpose of decorating neighborhood streets with red and white banners (umbur-umbur and bendera) in August?",
+                options: ["A. To show patriotism and festive spirit for Independence Day", "B. To scare away wild animals", "C. To sell cheap household goods", "D. To indicate a road construction zone"],
+                answer: 0 // A
+            },
+            {
+                id: 9, type: "pg", materi: "Celebrating Independence Day",
+                question: "Budi says: 'I watched the flag hoisting ceremony at the State Palace on television.' What tense is used in 'watched'?",
+                options: ["A. Simple Present Tense", "B. Simple Past Tense", "C. Present Continuous Tense", "D. Future Tense"],
+                answer: 1 // B
+            },
+            {
+                id: 10, type: "pg", materi: "Celebrating Independence Day",
+                question: "Which game involves trying to balance a spoon with a marble in your mouth while walking fast?",
+                options: ["A. Lomba balap karung", "B. Lomba makan kerupuk", "C. Lomba kelereng sendok (spoon and marble race)", "D. Tarik tambang"],
+                answer: 2 // C
+            },
+            {
+                id: 11, type: "pg", materi: "Celebrating Independence Day",
+                question: "When singing the national anthem 'Indonesia Raya' during the ceremony, how should participants behave?",
+                options: ["A. Stand up straight in a solemn and respectful manner", "B. Sit down and chat with friends", "C. Run around the field", "D. Eat snacks"],
+                answer: 0 // A
+            },
+            {
+                id: 12, type: "pg", materi: "Celebrating Independence Day",
+                question: "What is the typical prize won in a community tug-of-war (tarik tambang) competition on Independence Day?",
+                options: ["A. Useful household items or trophies", "B. Car engine parts", "C. Airplane tickets", "D. Textbooks"],
+                answer: 0 // A
+            },
+            {
+                id: 13, type: "pg", materi: "Celebrating Independence Day",
+                question: "Read the sentence: 'The committee distributed crackers hanging on strings for the eating crackers contest.' What is the contest called in Indonesian?",
+                options: ["A. Lomba makan kerupuk", "B. Lomba balap karung", "C. Lomba lari maraton", "D. Lomba bakiak"],
+                answer: 0 // A
+            },
+            {
+                id: 14, type: "pg", materi: "Celebrating Independence Day",
+                question: "Why do Indonesian schools organize competitions on Independence Day week?",
+                options: ["A. To build sportsmanship, joy, and unity among students", "B. To punish lazy students", "C. To waste school hours", "D. To test cooking skills"],
+                answer: 0 // A
+            },
+            {
+                id: 15, type: "pg", materi: "Celebrating Independence Day",
+                question: "What date marks the proclamation of Indonesian independence declared by Soekarno-Hatta?",
+                options: ["A. August 17, 1945", "B. October 28, 1928", "C. May 20, 1908", "D. November 10, 1945"],
+                answer: 0 // A
+            },
+
+            // --- 15 COMPLEX MULTIPLE CHOICE (16 - 30) ---
+            {
+                id: 16, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Select all common traditional games held during Independence Day celebrations: (Select all correct options)",
+                options: ["A. Balap karung (Sack race)", "B. Makan kerupuk (Cracker eating contest)", "C. Quantum physics quiz bowl", "D. Tarik tambang (Tug of war)"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 17, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Which activities show patriotism and respect during August 17th? (Select all correct options):",
+                options: ["A. Attending the flag-raising ceremony respectfully", "B. Hanging red and white flags in front of houses", "C. Sleeping through national holidays", "D. Participating in local community gotong royong"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 18, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "What elements are typically involved in a school flag ceremony? (Select all correct options):",
+                options: ["A. Flag hoisting troop (Paskibra)", "B. Singing national anthems", "C. Playing video games on mobile phones", "D. Reading the proclamation text and Pancasila"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 19, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Choose correct past tense verbs often used when recounting last year's Independence Day experience: (Select all correct options):",
+                options: ["A. Participated", "B. Won", "C. Will fly", "D. Celebrated"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 20, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "What are the common decorations seen across villages and cities in August? (Select all correct options):",
+                options: ["A. Red and white banners and flags", "B. Painted roadside curbs (pengecatan jalan)", "C. Heavy winter snow coats", "D. Colorful decorative lights and umbul-umbur"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 21, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Select values promoted by participating in traditional 17th August competitions: (Select all correct options):",
+                options: ["A. Cooperation and teamwork", "B. Sportsmanship and fair play", "C. Cheating and individualism", "D. Joy and national pride"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 22, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Which expressions are appropriate when telling friends about winning a race? (Select all correct options):",
+                options: ["A. I was so excited when I crossed the finish line first!", "B. My team won the tug of war competition!", "C. I hate national holidays.", "D. It was an unforgettable Independence Day experience."],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 23, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "What tasks are done during community service (gotong royong) prior to August 17th? (Select all correct options):",
+                options: ["A. Cleaning neighborhood alleys and public halls", "B. Setting up decorative lights and gates (gapura)", "C. Ignoring public garbage", "D. Preparing stages for cultural night performances"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 24, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Select items needed for the spoon and marble race: (Select all correct options):",
+                options: ["A. A small spoon", "B. A glass marble", "C. A heavy anchor", "D. Balance and steady walking"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 25, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Why do we commemorate Independence Day every year? (Select all correct options):",
+                options: ["A. To honor the struggles of national heroes", "B. To strengthen national unity and love for the country", "C. To avoid doing school homework", "D. To celebrate our freedom as a sovereign nation"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 26, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Which subjects or topics are typically integrated into English lessons during August? (Select all correct options):",
+                options: ["A. Recount texts about past experiences", "B. Vocabulary related to national celebrations", "C. Advanced calculus equations", "D. Descriptions of traditional games"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 27, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Select characteristics of a good recount text about Independence Day: (Select all correct options):",
+                options: ["A. Using chronological conjunctions (first, then, after that)", "B. Using past tense verbs", "C. Using future prediction verbs like 'will fly to Mars'", "D. Telling a personal experience of the event"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 28, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "What prizes are children usually excited about in 17th August games? (Select all correct options):",
+                options: ["A. Notebooks and stationery sets", "B. Toys and snacks", "C. Broken bicycle chains", "D. Colorful kites and medals"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 29, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Which phrases are used to invite someone to join a school competition? (Select all correct options):",
+                options: ["A. Let's join the sack race together!", "B. Would you like to register for the marble race?", "C. Why don't we sleep all day?", "D. Come on, let's practice for the tug of war!"],
+                answers: [0, 1, 3] // A, B, D
+            },
+            {
+                id: 30, type: "kompleks", materi: "Celebrating Independence Day",
+                question: "Select proper attire and equipment for participating in a school parade (karnaval): (Select all correct options):",
+                options: ["A. Cultural traditional costumes or creative uniforms", "B. Neat and enthusiastic posture", "C. Heavy winter ski boots in tropical weather", "D. Smiling and waving to spectators along the route"],
+                answers: [0, 1, 3] // A, B, D
+            },
+
+            // --- 5 MATCHING (31 - 35) ---
+            {
+                id: 31, type: "jodoh", materi: "Celebrating Independence Day",
+                question: "Match the traditional 17th August game with its English translation / description:",
+                pairs: [
+                    { left: "1. Lomba balap karung", right: "Sack race competition" },
+                    { left: "2. Lomba makan kerupuk", right: "Cracker eating contest" },
+                    { left: "3. Tarik tambang", right: "Tug of war team game" }
+                ]
+            },
+            {
+                id: 32, type: "jodoh", materi: "Celebrating Independence Day",
+                question: "Match the ceremony element with its proper definition:",
+                pairs: [
+                    { left: "1. Upacara bendera", right: "Flag-raising ceremony" },
+                    { left: "2. Paskibra", right: "Flag hoisting troop" },
+                    { left: "3. Indonesia Raya", right: "National anthem" }
+                ]
+            },
+            {
+                id: 33, type: "jodoh", materi: "Celebrating Independence Day",
+                question: "Match the decoration item with its function:",
+                pairs: [
+                    { left: "1. Bendera Merah Putih", right: "National flag displayed everywhere" },
+                    { left: "2. Umbul-umbur", right: "Colorful decorative vertical banners" },
+                    { left: "3. Gapura", right: "Decorated neighborhood entrance gate" }
+                ]
+            },
+            {
+                id: 34, type: "jodoh", materi: "Celebrating Independence Day",
+                question: "Match the grammar / text type with its context in recounting Independence Day:",
+                pairs: [
+                    { left: "1. Recount Text", right: "Text telling past events or experiences" },
+                    { left: "2. Past Tense (e.g., won, joined)", right: "Verb form used for completed past actions" },
+                    { left: "3. Chronological connectors", right: "Words like 'first', 'then', 'finally'" }
+                ]
+            },
+            {
+                id: 35, type: "jodoh", materi: "Celebrating Independence Day",
+                question: "Match the patriotic expression with its appropriate response or meaning:",
+                pairs: [
+                    { left: "1. Merdeka!", right: "Patriotic cry for freedom" },
+                    { left: "2. Happy Independence Day", right: "Congratulatory greeting on August 17th" },
+                    { left: "3. Gotong royong", right: "Community mutual cooperation" }
+                ]
+            }
+        ];
+
+        // Global State
+        let state = {
+            currentUser: null, // { name, kelas, presensi, role: 'siswa'|'admin' }
+            questions: JSON.parse(localStorage.getItem('pts_eng_VIII_questions')) || defaultQuestions,
+            scores: JSON.parse(localStorage.getItem('pts_eng_VIII_scores')) || [],
+            adminAuth: JSON.parse(localStorage.getItem('pts_eng_VIII_admin')) || { user: 'admin', pass: 'muallimin2026' },
+            appIdentity: JSON.parse(localStorage.getItem('pts_eng_VIII_identity')) || { name: "MTs. Mu'allimin NU Kota Malang", logo: "fa-solid fa-graduation-cap" },
+            currentExamIndex: 0,
+            userAnswers: {},
+            examTimerInterval: null,
+            timeRemaining: 90 * 60, // 90 minutes in seconds
+            isTestModeAsSiswa: false
+        };
+
+        // Initialization
+        window.onload = function() {
+            applyIdentity();
+            updateLoginTabUI('siswa');
+        };
+
+        function applyIdentity() {
+            document.getElementById('headerSchoolName').innerText = state.appIdentity.name;
+            const logoContainer = document.getElementById('headerLogoContainer');
+            logoContainer.innerHTML = `<i class="${state.appIdentity.logo}"></i>`;
+        }
+
+        function updateLoginTabUI(role) {
+            switchLoginTab(role);
+        }
+
+        // UI View Switcher
+        function switchView(viewId) {
+            const views = ['viewLogin', 'viewSiswaDashboard', 'viewExamRoom', 'viewExamResult', 'viewAdminDashboard'];
+            views.forEach(id => {
+                const el = document.getElementById(id);
+                if (id === viewId) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            // Profile Badge in Header
+            const profileBadge = document.getElementById('userProfileBadge');
+            if (state.currentUser) {
+                profileBadge.classList.remove('hidden');
+                document.getElementById('navUserName').innerText = `${state.currentUser.name} (${state.currentUser.role === 'admin' ? 'Admin' : state.currentUser.kelas})`;
+            } else {
+                profileBadge.classList.add('hidden');
+            }
+        }
+
+        // Login Tabs
+        function switchLoginTab(role) {
+            const tabSiswa = document.getElementById('tabSiswa');
+            const tabAdmin = document.getElementById('tabAdmin');
+            const formSiswa = document.getElementById('formSiswa');
+            const formAdmin = document.getElementById('formAdmin');
+
+            if (role === 'siswa') {
+                tabSiswa.className = "flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-900 shadow-sm";
+                tabAdmin.className = "flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600 hover:text-indigo-900";
+                formSiswa.classList.remove('hidden');
+                formAdmin.classList.add('hidden');
+            } else {
+                tabAdmin.className = "flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm";
+                tabSiswa.className = "flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600 hover:text-blue-900";
+                formAdmin.classList.remove('hidden');
+                formSiswa.classList.add('hidden');
+            }
+        }
+
+        // Handle Login Student
+        function handleLoginSiswa(e) {
+            e.preventDefault();
+            const name = document.getElementById('siswaNama').value.trim();
+            const kelas = document.getElementById('siswaKelas').value;
+            const presensi = document.getElementById('siswaPresensi').value.trim();
+
+            if (!name || !kelas || !presensi) {
+                showModalMessage("Warning", "All student identity fields must be filled out!", "warning");
+                return;
+            }
+
+            state.currentUser = {
+                name: name,
+                kelas: kelas,
+                presensi: presensi,
+                role: 'siswa'
+            };
+
+            setupSiswaDashboard();
+            switchView('viewSiswaDashboard');
+        }
+
+        // Handle Login Admin
+        function handleLoginAdmin(e) {
+            e.preventDefault();
+            const user = document.getElementById('adminUser').value.trim();
+            const pass = document.getElementById('adminPass').value.trim();
+
+            if (user === state.adminAuth.user && pass === state.adminAuth.pass) {
+                state.currentUser = {
+                    name: "Administrator / Teacher",
+                    role: 'admin'
+                };
+                setupAdminDashboard();
+                switchView('viewAdminDashboard');
+            } else {
+                showModalMessage("Login Failed", "Incorrect Admin Username or Password!", "error");
+            }
+        }
+
+        function handleLogout() {
+            if (state.examTimerInterval) clearInterval(state.examTimerInterval);
+            state.currentUser = null;
+            state.isTestModeAsSiswa = false;
+            switchView('viewLogin');
+            document.getElementById('formSiswa').reset();
+            document.getElementById('formAdmin').reset();
+        }
+
+        // Student Dashboard Setup
+        function setupSiswaDashboard() {
+            document.getElementById('welcomeSiswaName').innerText = state.currentUser.name;
+            document.getElementById('welcomeSiswaKelas').innerText = state.currentUser.kelas;
+            document.getElementById('welcomeSiswaPresensi').innerText = state.currentUser.presensi;
+
+            const studentAttempts = state.scores.filter(s => s.name.toLowerCase() === state.currentUser.name.toLowerCase() && s.presensi === state.currentUser.presensi);
+            const count = studentAttempts.length;
+            document.getElementById('currentAttemptCount').innerText = count;
+
+            const lastScore = count > 0 ? studentAttempts[count - 1].score : null;
+            const lastScoreDisplay = document.getElementById('lastScoreDisplay');
+            if (lastScore !== null) {
+                lastScoreDisplay.innerHTML = `Last Score: <span class="${lastScore >= 80 ? 'text-indigo-700' : 'text-red-600'}">${lastScore}</span>`;
+            } else {
+                lastScoreDisplay.innerHTML = `No previous attempts`;
+            }
+
+            const btnMulai = document.getElementById('btnMulaiUjian');
+            if (count >= 3 && !state.isTestModeAsSiswa) {
+                btnMulai.disabled = true;
+                btnMulai.className = "flex-1 py-3.5 bg-slate-300 text-slate-500 font-bold rounded-2xl cursor-not-allowed text-sm flex items-center justify-center gap-2";
+                btnMulai.innerHTML = `<i class="fa-solid fa-ban"></i> Attempt Limit Reached (3x)`;
+            } else {
+                btnMulai.disabled = false;
+                btnMulai.className = "flex-1 py-3.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold rounded-2xl transition shadow-lg shadow-indigo-700/20 text-sm flex items-center justify-center gap-2";
+                btnMulai.innerHTML = `<i class="fa-solid fa-play"></i> Start Assessment Now`;
+            }
+        }
+
+        // Start Exam
+        function startExam() {
+            state.currentExamIndex = 0;
+            state.userAnswers = {};
+            state.timeRemaining = 90 * 60; // 90 minutes
+            switchView('viewExamRoom');
+            renderQuestion();
+            startExamTimer();
+        }
+
+        function startExamTimer() {
+            if (state.examTimerInterval) clearInterval(state.examTimerInterval);
+            state.examTimerInterval = setInterval(() => {
+                state.timeRemaining--;
+                const min = Math.floor(state.timeRemaining / 60);
+                const sec = state.timeRemaining % 60;
+                document.getElementById('examTimer').innerText = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+
+                if (state.timeRemaining <= 0) {
+                    clearInterval(state.examTimerInterval);
+                    showModalMessage("Time's Up", "Your exam time has expired! The system will automatically submit your answers.", "warning");
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function renderQuestion() {
+            const q = state.questions[state.currentExamIndex];
+            document.getElementById('currentQuestionNum').innerText = state.currentExamIndex + 1;
+            
+            let typeTag = "Multiple Choice";
+            if (q.type === 'kompleks') typeTag = "Complex Multiple Choice (Select > 1)";
+            if (q.type === 'jodoh') typeTag = "Matching Pairs";
+            document.getElementById('currentQuestionTypeTag').innerText = `${q.materi} — ${typeTag}`;
+
+            const container = document.getElementById('questionContainer');
+            let html = `
+                <div class="text-xs font-bold text-indigo-700 uppercase tracking-wide">Topic: ${q.materi}</div>
+                <div class="text-base font-semibold text-slate-900 leading-relaxed">${q.question}</div>
+            `;
+
+            if (q.type === 'pg') {
+                html += `<div class="space-y-3 pt-2">`;
+                q.options.forEach((opt, idx) => {
+                    const isChecked = state.userAnswers[state.currentExamIndex] === idx ? 'checked' : '';
+                    const borderClass = isChecked ? 'border-indigo-500 bg-indigo-50/50 text-indigo-950 font-semibold' : 'border-slate-200 hover:border-slate-300 text-slate-700';
+                    html += `
+                        <label class="flex items-center gap-3 p-4 rounded-2xl border ${borderClass} cursor-pointer transition">
+                            <input type="radio" name="answer_pg" value="${idx}" ${isChecked} onchange="saveAnswer(${idx})" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-sm">${opt}</span>
+                        </label>
+                    `;
+                });
+                html += `</div>`;
+            } else if (q.type === 'kompleks') {
+                html += `<div class="text-xs text-slate-500 italic mb-2"><i class="fa-solid fa-circle-info mr-1"></i> Check all correct options (more than one).</div><div class="space-y-3 pt-2">`;
+                const savedArr = state.userAnswers[state.currentExamIndex] || [];
+                q.options.forEach((opt, idx) => {
+                    const isChecked = savedArr.includes(idx) ? 'checked' : '';
+                    html += `
+                        <label class="flex items-center gap-3 p-4 rounded-2xl border border-slate-200 hover:border-slate-300 text-slate-700 cursor-pointer transition">
+                            <input type="checkbox" value="${idx}" ${isChecked} onchange="saveAnswerKompleks(${idx}, this.checked)" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500">
+                            <span class="text-sm">${opt}</span>
+                        </label>
+                    `;
+                });
+                html += `</div>`;
+            } else if (q.type === 'jodoh') {
+                html += `<div class="space-y-4 pt-2">`;
+                const savedJodoh = state.userAnswers[state.currentExamIndex] || {};
+                q.pairs.forEach((pair, pIdx) => {
+                    html += `
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
+                            <div class="text-xs font-bold text-slate-800">${pair.left}</div>
+                            <select onchange="saveAnswerJodoh(${pIdx}, this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                <option value="">-- Choose Matching Option --</option>
+                    `;
+                    q.pairs.forEach((optPair, oIdx) => {
+                        const selected = savedJodoh[pIdx] == oIdx ? 'selected' : '';
+                        html += `<option value="${oIdx}" ${selected}>${optPair.right}</option>`;
+                    });
+                    html += `</select></div>`;
+                });
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+            renderPaginationDots();
+
+            document.getElementById('btnPrev').disabled = state.currentExamIndex === 0;
+            const btnNext = document.getElementById('btnNext');
+            if (state.currentExamIndex === state.questions.length - 1) {
+                btnNext.innerHTML = `Finish & Submit <i class="fa-solid fa-check ml-1"></i>`;
+                btnNext.className = "px-5 py-2.5 rounded-xl bg-blue-700 text-white hover:bg-blue-800 text-xs font-bold transition shadow-md shadow-blue-700/20";
+                btnNext.setAttribute('onclick', 'confirmSubmitExam()');
+            } else {
+                btnNext.innerHTML = `Next <i class="fa-solid fa-chevron-right ml-1"></i>`;
+                btnNext.className = "px-5 py-2.5 rounded-xl bg-indigo-700 text-white hover:bg-indigo-800 text-xs font-bold transition shadow-md shadow-indigo-700/20";
+                btnNext.setAttribute('onclick', 'navigateQuestion(1)');
+            }
+        }
+
+        function renderPaginationDots() {
+            const paginationContainer = document.getElementById('questionNumberPagination');
+            let html = '';
+            for (let i = 0; i < state.questions.length; i++) {
+                const isCurrent = i === state.currentExamIndex;
+                const isAnswered = state.userAnswers[i] !== undefined && Object.keys(state.userAnswers[i]).length > 0;
+                let btnClass = "w-8 h-8 rounded-xl text-xs font-bold transition flex items-center justify-center ";
+                if (isCurrent) {
+                    btnClass += "bg-indigo-900 text-white shadow-md";
+                } else if (isAnswered) {
+                    btnClass += "bg-indigo-100 text-indigo-900 border border-indigo-300";
+                } else {
+                    btnClass += "bg-slate-100 text-slate-600 hover:bg-slate-200";
+                }
+                html += `<button onclick="jumpToQuestion(${i})" class="${btnClass}">${i + 1}</button>`;
+            }
+            paginationContainer.innerHTML = html;
+        }
+
+        function saveAnswer(val) {
+            state.userAnswers[state.currentExamIndex] = val;
+            renderPaginationDots();
+        }
+
+        function saveAnswerKompleks(optIdx, isChecked) {
+            if (!state.userAnswers[state.currentExamIndex]) {
+                state.userAnswers[state.currentExamIndex] = [];
+            }
+            let arr = state.userAnswers[state.currentExamIndex];
+            if (isChecked) {
+                if (!arr.includes(optIdx)) arr.push(optIdx);
+            } else {
+                state.userAnswers[state.currentExamIndex] = arr.filter(item => item !== optIdx);
+            }
+            renderPaginationDots();
+        }
+
+        function saveAnswerJodoh(pairIdx, val) {
+            if (!state.userAnswers[state.currentExamIndex]) {
+                state.userAnswers[state.currentExamIndex] = {};
+            }
+            state.userAnswers[state.currentExamIndex][pairIdx] = val;
+            renderPaginationDots();
+        }
+
+        function navigateQuestion(direction) {
+            const newIndex = state.currentExamIndex + direction;
+            if (newIndex >= 0 && newIndex < state.questions.length) {
+                state.currentExamIndex = newIndex;
+                renderQuestion();
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            state.currentExamIndex = idx;
+            renderQuestion();
+        }
+
+        function confirmSubmitExam() {
+            if (confirm("Are you sure you want to finish and submit your exam answers?")) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (state.examTimerInterval) clearInterval(state.examTimerInterval);
+
+            let totalScore = 0;
+            const totalQuestions = state.questions.length;
+            const pointsPerQuestion = 100 / totalQuestions;
+
+            state.questions.forEach((q, idx) => {
+                const userAns = state.userAnswers[idx];
+                if (userAns !== undefined) {
+                    if (q.type === 'pg') {
+                        if (userAns === q.answer) {
+                            totalScore += pointsPerQuestion;
+                        }
+                    } else if (q.type === 'kompleks') {
+                        const correctSet = new Set(q.answers);
+                        const userSet = new Set(userAns);
+                        if (correctSet.size === userSet.size && [...correctSet].every(val => userSet.has(val))) {
+                            totalScore += pointsPerQuestion;
+                        }
+                    } else if (q.type === 'jodoh') {
+                        let allCorrect = true;
+                        q.pairs.forEach((p, pIdx) => {
+                            if (userAns[pIdx] != pIdx) allCorrect = false;
+                        });
+                        if (allCorrect && Object.keys(userAns).length === q.pairs.length) {
+                            totalScore += pointsPerQuestion;
+                        }
+                    }
+                }
+            });
+
+            const finalScore = Math.round(totalScore);
+
+            if (!state.isTestModeAsSiswa) {
+                const studentAttempts = state.scores.filter(s => s.name.toLowerCase() === state.currentUser.name.toLowerCase() && s.presensi === state.currentUser.presensi);
+                const attemptNo = studentAttempts.length + 1;
+
+                const scoreRecord = {
+                    name: state.currentUser.name,
+                    kelas: state.currentUser.kelas,
+                    presensi: state.currentUser.presensi,
+                    score: finalScore,
+                    attempt: attemptNo,
+                    timestamp: new Date().toLocaleString('en-US')
+                };
+                state.scores.push(scoreRecord);
+                localStorage.setItem('pts_eng_VIII_scores', JSON.stringify(state.scores));
+            }
+
+            renderResultView(finalScore);
+            switchView('viewExamResult');
+        }
+
+        function renderResultView(score) {
+            const isPassed = score >= 80;
+            const iconEl = document.getElementById('resultIcon');
+            const statusEl = document.getElementById('resStatus');
+            
+            document.getElementById('resFinalScore').innerText = score;
+            document.getElementById('resultSubtitle').innerText = `Student: ${state.currentUser.name} (${state.currentUser.kelas})`;
+
+            if (isPassed) {
+                iconEl.className = "w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-3xl shadow-lg bg-indigo-100 text-indigo-700";
+                iconEl.innerHTML = `<i class="fa-solid fa-award"></i>`;
+                statusEl.innerHTML = `<span class="text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-200">PASSED (KKM ≥ 80)</span>`;
+            } else {
+                iconEl.className = "w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-3xl shadow-lg bg-amber-100 text-amber-700";
+                iconEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+                statusEl.innerHTML = `<span class="text-amber-700 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200">NOT PASSED (KKM < 80)</span>`;
+            }
+        }
+
+        function returnToDashboard() {
+            if (state.isTestModeAsSiswa) {
+                state.isTestModeAsSiswa = false;
+                state.currentUser = { name: "Administrator / Teacher", role: 'admin' };
+                setupAdminDashboard();
+                switchView('viewAdminDashboard');
+            } else {
+                setupSiswaDashboard();
+                switchView('viewSiswaDashboard');
+            }
+        }
+
+        function downloadPDFCertificate() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFillColor(79, 70, 229);
+            doc.rect(0, 0, 210, 40, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(16);
+            doc.text("MTs. MU'ALLIMIN NU KOTA MALANG", 105, 18, { align: 'center' });
+            doc.setFontSize(10);
+            doc.text("ENGLISH MID-TERM ASSESSMENT (PTS) CERTIFICATE - GRADE VIII", 105, 28, { align: 'center' });
+
+            doc.setTextColor(30, 41, 59);
+            doc.setFontSize(12);
+            doc.text("Awarded to:", 20, 60);
+
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text(state.currentUser.name, 20, 70);
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(11);
+            doc.text(`Class: ${state.currentUser.kelas}`, 20, 80);
+            doc.text(`Attendance Number: ${state.currentUser.presensi}`, 20, 88);
+            doc.text(`Compiled by: Puji Linda Evita, S.Pd.`, 20, 96);
+
+            const lastRecord = state.scores.filter(s => s.name === state.currentUser.name).pop();
+            const scoreVal = lastRecord ? lastRecord.score : 0;
+
+            doc.setDrawColor(79, 70, 229);
+            doc.roundedRect(20, 110, 170, 40, 3, 3);
+            doc.setFontSize(12);
+            doc.text("FINAL ASSESSMENT SCORE:", 30, 127);
+            doc.setFontSize(24);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(79, 70, 229);
+            doc.text(`${scoreVal}`, 150, 132, { align: 'right' });
+
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(100, 116, 139);
+            doc.text(`Passing Grade: 80 | Status: ${scoreVal >= 80 ? 'PASSED' : 'NOT PASSED'}`, 30, 142);
+
+            doc.text(`Generated automatically from Digital Assessment System on ${new Date().toLocaleString('en-US')}`, 105, 180, { align: 'center' });
+
+            doc.save(`PTS_English_Grade_VIII_${state.currentUser.name.replace(/\s+/g, '_')}.pdf`);
+        }
+
+        // --- ADMIN DASHBOARD LOGIC ---
+        function setupAdminDashboard() {
+            renderAdminQuestionList();
+            renderAdminScoreTable();
+        }
+
+        function switchAdminTab(tabName) {
+            const tabSoalBtn = document.getElementById('adminTabSoalBtn');
+            const tabNilaiBtn = document.getElementById('adminTabNilaiBtn');
+            const tabSoalContent = document.getElementById('adminTabSoalContent');
+            const tabNilaiContent = document.getElementById('adminTabNilaiContent');
+
+            if (tabName === 'soal') {
+                tabSoalBtn.className = "px-5 py-2.5 text-xs font-bold rounded-xl transition bg-indigo-700 text-white shadow-md";
+                tabNilaiBtn.className = "px-5 py-2.5 text-xs font-bold rounded-xl transition bg-white text-slate-700 hover:bg-slate-100";
+                tabSoalContent.classList.remove('hidden');
+                tabNilaiContent.classList.add('hidden');
+            } else {
+                tabNilaiBtn.className = "px-5 py-2.5 text-xs font-bold rounded-xl transition bg-indigo-700 text-white shadow-md";
+                tabSoalBtn.className = "px-5 py-2.5 text-xs font-bold rounded-xl transition bg-white text-slate-700 hover:bg-slate-100";
+                tabNilaiContent.classList.remove('hidden');
+                tabSoalContent.classList.add('hidden');
+                renderAdminScoreTable();
+            }
+        }
+
+        function renderAdminQuestionList() {
+            const container = document.getElementById('adminQuestionListContainer');
+            let html = '';
+            state.questions.forEach((q, idx) => {
+                html += `
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">Question No. ${idx + 1} (${q.type.toUpperCase()})</span>
+                            <span class="text-xs text-slate-500">${q.materi}</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Question Text:</label>
+                            <input type="text" id="admin_q_${idx}" value="${q.question}" onchange="updateQuestionText(${idx}, this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateQuestionText(idx, val) {
+            state.questions[idx].question = val;
+            localStorage.setItem('pts_eng_VIII_questions', JSON.stringify(state.questions));
+        }
+
+        function renderAdminScoreTable() {
+            const tbody = document.getElementById('adminScoreTableBody');
+            if (state.scores.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">No student submissions yet.</td></tr>`;
+                return;
+            }
+            let html = '';
+            state.scores.forEach((s, idx) => {
+                const isPass = s.score >= 80;
+                html += `
+                    <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+                        <td class="p-3 font-semibold">${idx + 1}</td>
+                        <td class="p-3 font-bold text-slate-900">${s.name}</td>
+                        <td class="p-3">${s.kelas}</td>
+                        <td class="p-3">${s.presensi}</td>
+                        <td class="p-3 font-bold ${isPass ? 'text-indigo-700' : 'text-red-600'}">${s.score}</td>
+                        <td class="p-3"><span class="px-2 py-1 rounded-md text-[10px] font-bold ${isPass ? 'bg-indigo-100 text-indigo-800' : 'bg-red-100 text-red-800'}">${isPass ? 'Passed' : 'Not Passed'}</span></td>
+                        <td class="p-3">Attempt ${s.attempt}</td>
+                        <td class="p-3 text-slate-500">${s.timestamp}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function exportScoresCSV() {
+            if (state.scores.length === 0) {
+                showModalMessage("Empty", "No score data available for export.", "warning");
+                return;
+            }
+            let csv = "No,Student Name,Class,Attendance No,Score,Status,Attempt,Timestamp\n";
+            state.scores.forEach((s, i) => {
+                csv += `${i+1},"${s.name}",${s.kelas},${s.presensi},${s.score},${s.score >= 80 ? 'Passed' : 'Not Passed'},${s.attempt},"${s.timestamp}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Score_Recap_PTS_English_Grade_VIII.csv`;
+            a.click();
+        }
+
+        function adminActionTestExam() {
+            state.currentUser = {
+                name: "Test Mode Teacher / Admin",
+                kelas: "VII A",
+                presensi: "99",
+                role: 'siswa'
+            };
+            state.isTestModeAsSiswa = true;
+            startExam();
+        }
+
+        function openAdminSettingsModal() {
+            document.getElementById('settingAdminUser').value = state.adminAuth.user;
+            document.getElementById('settingAdminPass').value = state.adminAuth.pass;
+            document.getElementById('modalAdminSettings').classList.remove('hidden');
+        }
+
+        function handleSaveAdminPassword(e) {
+            e.preventDefault();
+            const u = document.getElementById('settingAdminUser').value.trim();
+            const p = document.getElementById('settingAdminPass').value.trim();
+            state.adminAuth = { user: u, pass: p };
+            localStorage.setItem('pts_eng_VIII_admin', JSON.stringify(state.adminAuth));
+            closeModal('modalAdminSettings');
+            showModalMessage("Success", "Admin Username and Password successfully updated!", "success");
+        }
+
+        function openAdminLogoModal() {
+            document.getElementById('settingSchoolName').value = state.appIdentity.name;
+            document.getElementById('settingSchoolLogo').value = state.appIdentity.logo;
+            document.getElementById('modalAdminLogo').classList.remove('hidden');
+        }
+
+        function handleSaveAdminIdentity(e) {
+            e.preventDefault();
+            const name = document.getElementById('settingSchoolName').value.trim();
+            const logo = document.getElementById('settingSchoolLogo').value.trim();
+            state.appIdentity = { name: name, logo: logo };
+            localStorage.setItem('pts_eng_VIII_identity', JSON.stringify(state.appIdentity));
+            applyIdentity();
+            closeModal('modalAdminLogo');
+            showModalMessage("Success", "School identity successfully updated!", "success");
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function showModalMessage(title, text, type) {
+            const modal = document.getElementById('modalMessage');
+            document.getElementById('msgModalTitle').innerText = title;
+            document.getElementById('msgModalText').innerText = text;
+            const iconEl = document.getElementById('msgModalIcon');
+            
+            if (type === 'success') {
+                iconEl.className = "w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-xl text-white bg-indigo-600";
+                iconEl.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            } else if (type === 'warning') {
+                iconEl.className = "w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-xl text-white bg-amber-600";
+                iconEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            } else {
+                iconEl.className = "w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-xl text-white bg-red-600";
+                iconEl.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+            }
+            modal.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
